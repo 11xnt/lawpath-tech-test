@@ -1,23 +1,11 @@
-"use client";
+"use client"
 
-import {ChangeEvent, FormEvent, useState} from "react";
-import Form from 'next/form'
+import {FormEvent, useState} from "react";
+import Form from "next/form";
 import Select from "react-select";
-
-const stateOptions = [
-	{value: 'VIC', label: 'Victoria'},
-	{value: 'NSW', label: 'New South Wales'},
-	{value: 'SA', label: 'South Australia'},
-	{value: 'QLD', label: 'Queensland'},
-	{value: 'WA', label: 'Western Australia'},
-	{value: 'TAS', label: 'Tasmania'},
-]
-
-interface FormData {
-	postcode: string;
-	suburb: string;
-	state: string;
-}
+import { FormData, stateOptions } from "@/app/schemas/schemas";
+import {FETCH_DATA_QUERY} from "@/app/api/address/route";
+import {useLazyQuery} from "@apollo/client";
 
 export default function AddressForm() {
 
@@ -27,23 +15,19 @@ export default function AddressForm() {
 		state: "",
 	});
 
-	const handleChange = (e: ChangeEvent<HTMLInputElement>) => {
-		setFormData({...formData, [e.target.name]: e.target.value});
+	const [fetchData, { data, loading, error }] = useLazyQuery(FETCH_DATA_QUERY);
+
+	const handleChange = (e: React.ChangeEvent<HTMLInputElement> | { value: string; name: string }) => {
+		const { name, value } = "target" in e ? e.target : e;
+		setFormData((prev) => ({ ...prev, [name]: value }));
 	};
 
 	const handleSubmit = async (e: FormEvent<HTMLFormElement>) => {
 		e.preventDefault();
+		console.log("Submitting with variables:", formData);
+		const res = await fetchData({variables: {q: formData.suburb, state: formData.state}});
+		console.log(res.data.fetchAddress.localities);
 
-		const queryParams = new URLSearchParams(formData as any).toString();
-		const response = await fetch(`/api/address?${queryParams}`);
-		const data = await response.json();
-		console.log(data);
-
-		if(data.localities.locality.postcode.toString() === formData.postcode) {
-			alert("Valid");
-		} else {
-			alert("Error");
-		}
 	};
 
 	return (
@@ -73,7 +57,8 @@ export default function AddressForm() {
 			</div>
 			<div className="mb-4">
 				<label className="block text-sm font-medium">State</label>
-				<Select options={stateOptions}/>
+				<Select options={stateOptions}
+						onChange={handleChange}/>
 			</div>
 			<button
 				type="submit"

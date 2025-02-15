@@ -1,18 +1,16 @@
-import { NextRequest, NextResponse } from "next/server";
+import {gql} from '@apollo/client';
 
-export async function GET(req: NextRequest) {
-	const { searchParams } = new URL(req.url);
-	const postcode = searchParams.get("postcode");
-	const suburb = searchParams.get("suburb");
-	const state = searchParams.get("state");
-
-	const res = await fetch(`${process.env.API_URL}?q=${suburb}&state=${state}`, {
-		method: 'GET',
-		headers: {
-			'Authorization': 'Bearer '+process.env.AUTHORIZATION_TOKEN,
-		},
-	});
-	const data = await res.json();
-
-	return NextResponse.json(data);
+export const FETCH_DATA_QUERY = gql`
+  query FetchAddress($q: String!, $state: String!) {
+  fetchAddress(q: $q, state: $state)
+  @rest(type: "Get", path: "?q={args.q}&state={args.state}") {
+    localities {
+    	locality {
+    		postcode
+    		state
+    		location
+    	}
+    }
+  }
 }
+`;
