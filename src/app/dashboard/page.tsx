@@ -55,7 +55,7 @@ export default function Dashboard() {
 				<div className="mb-4">
 					<label className="block text-sm font-medium">Postcode</label>
 					<input
-						type="text"
+						type="number"
 						name="postcode"
 						value={formData.postcode}
 						onChange={handleChange}
@@ -76,7 +76,7 @@ export default function Dashboard() {
 				</div>
 				<div className="mb-4">
 					<label className="block text-sm font-medium">State</label>
-					<Select options={stateOptions}
+					<Select id={"multi-selector"} options={stateOptions}
 							onChange={handleChange}/>
 				</div>
 				<button
@@ -87,6 +87,7 @@ export default function Dashboard() {
 
 				{notification && (
 					<div
+						id={"notification"}
 						className={`mt-4 p-2 text-white rounded-lg text-center ${
 							notification.includes("Error") ? "bg-red-500" : "bg-green-500"
 						}`}
