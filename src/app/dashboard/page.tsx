@@ -17,9 +17,16 @@ export default function Dashboard() {
 	const [fetchData, {}] = useLazyQuery(FETCH_DATA_QUERY);
 	const [notification, setNotification] = useState<string | null>(null);
 
-	const handleChange = (e: React.ChangeEvent<HTMLInputElement> | { value: string; name: string }) => {
-		const {name, value} = "target" in e ? e.target : e;
-		setFormData((prev) => ({...prev, [name]: value}));
+	const handleChange = (
+		e: React.ChangeEvent<HTMLInputElement> | { value: string; name: string } | null) => {
+		if (!e) return;
+
+		if ("target" in e) {
+			const { name, value } = e.target;
+			setFormData((prev) => ({ ...prev, [name]: value }));
+		} else {
+			setFormData((prev) => ({ ...prev, [e.name]: e.value }));
+		}
 	};
 
 	const handleSubmit = async (e: FormEvent<HTMLFormElement>) => {
