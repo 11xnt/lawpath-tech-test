@@ -26,8 +26,10 @@ Make sure you have the following installed on your system:
    ```
 3. Update .env.local:
    ```sh
-    AUTHORIZATION_TOKEN=<your authorization token value>
-    API_URL=<Australian Post API URL>
+   AUTHORIZATION_TOKEN=<your authorization token value>
+   API_URL=<Australian Post API URL>
+   GITHUB_CLIENT_ID=<GitHub OAuth App Client ID>
+   GITHUB_CLIENT_SECRET=<GitHub OAuth App Client Secret>
    ```
 
 ### Running the Development Server
@@ -49,6 +51,7 @@ To run the tests, execute:
 ```sh
 npx playwright test
 # ensure development server is up and running in a separate tab
+# or you can run the "formTests.spec.ts" file in /tests directory
 ```
 
 ## Live Deployment

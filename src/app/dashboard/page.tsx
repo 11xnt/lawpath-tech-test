@@ -1,13 +1,15 @@
 "use client";
 
 import dynamic from "next/dynamic";
+import {ApolloProvider} from "@apollo/client";
+import {apolloClient} from "@/app/lib/apolloClient";
 
 const DashboardForm = dynamic(() => import("@/app/components/dashboardForm"), { ssr: false });
 
 export default function Dashboard() {
 	return (
-		<div className="flex items-center justify-center min-h-screen bg-gray-100">
+		<ApolloProvider client={apolloClient}>
 			<DashboardForm />
-		</div>
+		</ApolloProvider>
 	);
 }
