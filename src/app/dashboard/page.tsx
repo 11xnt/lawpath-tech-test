@@ -4,7 +4,7 @@ import {FormEvent, useState} from "react";
 import Form from "next/form";
 import Select from "react-select";
 import {FormData, Locality, stateOptions} from "@/app/schemas/schemas";
-import {FETCH_DATA_QUERY} from "@/app/api/address/route";
+import {FETCH_DATA_QUERY} from "@/app/api/address/query";
 import {useLazyQuery} from "@apollo/client";
 
 export default function Dashboard() {
