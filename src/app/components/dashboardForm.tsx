@@ -6,6 +6,7 @@ import Select from "react-select";
 import { FormData, Locality, stateOptions } from "@/app/schemas/schemas";
 import { FETCH_DATA_QUERY } from "@/app/api/address/query";
 import { useLazyQuery } from "@apollo/client";
+import Notification from "@/app/components/notification";
 
 export default function DashboardForm() {
 	const [formData, setFormData] = useState<FormData>({
@@ -15,7 +16,7 @@ export default function DashboardForm() {
 	});
 
 	const [fetchData] = useLazyQuery(FETCH_DATA_QUERY);
-	const [notification, setNotification] = useState<string | null>(null);
+	const [notification, setNotification] = useState("");
 
 	const handleChange = (
 		e: React.ChangeEvent<HTMLInputElement> | { value: string; name: string } | null
@@ -32,7 +33,7 @@ export default function DashboardForm() {
 
 	const handleSubmit = async (e: FormEvent<HTMLFormElement>) => {
 		e.preventDefault();
-		setNotification(null);
+		setNotification("");
 		const res = await fetchData({ variables: { q: formData.suburb, state: formData.state } });
 		let localities = res.data.fetchAddress.localities;
 
@@ -87,16 +88,8 @@ export default function DashboardForm() {
 			<button type="submit" className="w-full bg-blue-500 text-white py-2 rounded hover:bg-blue-600">
 				Submit
 			</button>
-
 			{notification && (
-				<div
-					id={"notification"}
-					className={`mt-4 p-2 text-white rounded-lg text-center ${
-						notification.includes("Error") ? "bg-red-500" : "bg-green-500"
-					}`}
-				>
-					{notification}
-				</div>
+				<Notification message={notification} />
 			)}
 		</Form>
 	);
