@@ -3,7 +3,7 @@
 import {FormEvent, useState} from "react";
 import Form from "next/form";
 import Select from "react-select";
-import {FormData, stateOptions} from "@/app/schemas/schemas";
+import {FormData, Locality, stateOptions} from "@/app/schemas/schemas";
 import {FETCH_DATA_QUERY} from "@/app/api/address/route";
 import {useLazyQuery} from "@apollo/client";
 
@@ -14,7 +14,7 @@ export default function Dashboard() {
 		state: "",
 	});
 
-	const [fetchData, {data, loading, error}] = useLazyQuery(FETCH_DATA_QUERY);
+	const [fetchData, {}] = useLazyQuery(FETCH_DATA_QUERY);
 	const [notification, setNotification] = useState<string | null>(null);
 
 	const handleChange = (e: React.ChangeEvent<HTMLInputElement> | { value: string; name: string }) => {
@@ -32,7 +32,7 @@ export default function Dashboard() {
 			setNotification("Error: Suburb " + formData.suburb + " does not exist in the state: " + formData.state);
 		}
 		if (localities.locality.length > 1) {
-			const filteredLocality = localities.locality.filter((locality: any) =>
+			const filteredLocality = localities.locality.filter((locality: Locality) =>
 				locality.location.toString().toLowerCase() === formData.suburb.toLowerCase()
 			);
 			localities = filteredLocality[0];

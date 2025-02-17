@@ -4,6 +4,12 @@ export interface FormData {
 	state: string;
 }
 
+export interface Locality {
+	location: string;
+	postcode: string;
+	state: string;
+}
+
 export const stateOptions = [
 	{value: 'VIC', label: 'Victoria', name: "state"},
 	{value: 'NSW', label: 'New South Wales', name: "state"},
