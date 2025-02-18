@@ -30,7 +30,12 @@ Make sure you have the following installed on your system:
    API_URL=<Australian Post API URL>
    GITHUB_CLIENT_ID=<GitHub OAuth App Client ID>
    GITHUB_CLIENT_SECRET=<GitHub OAuth App Client Secret>
+   NEXTAUTH_URL=http://localhost:3000 // or your deployment url
+   NEXTAUTH_SECRET= // generate with 'openssl rand -base64 32'
+   STATIC_EMAIL=allen@lawpath.com // change if you want different log in credentials
+   STATIC_PASSWORD=secret // change if you want different log in credentials
    ```
+   note: visit [here]() 
 
 ### Running the Development Server
 

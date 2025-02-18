@@ -35,24 +35,29 @@ export default function DashboardForm() {
 		e.preventDefault();
 		setNotification("");
 		const res = await fetchData({ variables: { q: formData.suburb, state: formData.state } });
-		let localities = res.data.fetchAddress.localities;
+		try {
+			let localities = await res.data.fetchAddress.localities;
 
-		if (Object.keys(localities).length === 0 && localities.constructor === Object) {
-			setNotification(`Error: Suburb ${formData.suburb} does not exist in the state: ${formData.state}`);
-		}
-		if (localities.locality.length > 1) {
-			const filteredLocality = localities.locality.filter(
-				(locality: Locality) => locality.location.toString().toLowerCase() === formData.suburb.toLowerCase()
-			);
-			localities = filteredLocality[0];
-		} else {
-			localities = localities.locality;
-		}
-		const postcode = localities.postcode;
-		if (postcode.toString() === formData.postcode) {
-			setNotification("Valid address!");
-		} else {
-			setNotification(`Error: Postcode ${formData.postcode} does not match suburb: ${formData.suburb}`);
+			if (!localities?.locality || Object.keys(localities).length === 0) {
+				setNotification(`Error: Suburb ${formData.suburb} does not exist in the state: ${formData.state}`);
+				return;
+			}
+			if (localities.locality.length > 1) {
+				const filteredLocality = localities.locality.filter(
+					(locality: Locality) => locality.location.toString().toLowerCase() === formData.suburb.toLowerCase()
+				);
+				localities = filteredLocality[0];
+			} else {
+				localities = localities.locality;
+			}
+			if (localities.postcode.toString() === formData.postcode) {
+				setNotification("Valid address!");
+			} else {
+				setNotification(`Error: Postcode ${formData.postcode} does not match suburb: ${formData.suburb}`);
+			}
+		} catch (error) {
+			setNotification("Error: Internal Server Error");
+			console.error(error);
 		}
 	};
 
