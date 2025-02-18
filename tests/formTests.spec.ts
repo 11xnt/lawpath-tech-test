@@ -1,5 +1,12 @@
 import { test, expect } from "@playwright/test";
 
+test.beforeEach(async ({ page }) => {
+  await page.goto("/");
+  await page.fill('input[name="email"]', "allen@lawpath.com");
+  await page.fill('input[name="password"]', "secret");
+  await page.click('button[type="submit"]');
+});
+
 const positiveTestCases = [
   { state: "New South Wales", suburb: "Zetland", postcode: "2017"},
   { state: "Victoria", suburb: "Melbourne", postcode: "3000" },
@@ -32,7 +39,6 @@ const invalidSuburbTestCases = [
 
 positiveTestCases.forEach(({state, suburb, postcode}) => {
     test(`should display positive notification for ${suburb} ${state} ${postcode}`, async ({ page }) => {
-      await page.goto("/");
       await page.fill('input[name="postcode"]', postcode);
       await page.fill('input[name="suburb"]', suburb);
       await page.click("#multi-selector");
@@ -46,7 +52,6 @@ positiveTestCases.forEach(({state, suburb, postcode}) => {
 
 invalidPostCodeTestCases.forEach(({state, suburb, postcode}) => {
   test(`should display negative postcode notification for ${suburb} ${state} ${postcode}`, async ({ page }) => {
-    await page.goto("/");
     await page.fill('input[name="postcode"]', postcode);
     await page.fill('input[name="suburb"]', suburb);
     await page.click("#multi-selector");
@@ -60,7 +65,6 @@ invalidPostCodeTestCases.forEach(({state, suburb, postcode}) => {
 
 invalidSuburbTestCases.forEach(({state, suburb, postcode}) => {
   test(`should display negative suburb notification for ${suburb} ${state} ${postcode}`, async ({ page }) => {
-    await page.goto("/");
     await page.fill('input[name="postcode"]', postcode);
     await page.fill('input[name="suburb"]', suburb);
     await page.click("#multi-selector");
