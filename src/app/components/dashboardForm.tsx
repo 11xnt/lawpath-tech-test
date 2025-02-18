@@ -1,12 +1,13 @@
 "use client";
 
-import { FormEvent, useState } from "react";
+import React, { FormEvent, useState } from "react";
 import Form from "next/form";
 import Select from "react-select";
 import { FormData, Locality, stateOptions } from "@/app/schemas/schemas";
 import { FETCH_DATA_QUERY } from "@/app/api/address/query";
 import { useLazyQuery } from "@apollo/client";
 import Notification from "@/app/components/notification";
+import {Spinner} from "@heroui/spinner";
 
 export default function DashboardForm() {
 	const [formData, setFormData] = useState<FormData>({
@@ -16,6 +17,7 @@ export default function DashboardForm() {
 	});
 
 	const [fetchData] = useLazyQuery(FETCH_DATA_QUERY);
+	const [isLoading, setIsLoading] = useState(false);
 	const [notification, setNotification] = useState("");
 
 	const handleChange = (
@@ -34,6 +36,7 @@ export default function DashboardForm() {
 	const handleSubmit = async (e: FormEvent<HTMLFormElement>) => {
 		e.preventDefault();
 		setNotification("");
+		setIsLoading(true);
 		const res = await fetchData({ variables: { q: formData.suburb, state: formData.state } });
 		try {
 			let localities = await res.data.fetchAddress.localities;
@@ -58,6 +61,8 @@ export default function DashboardForm() {
 		} catch (error) {
 			setNotification("Error: Internal Server Error");
 			console.error(error);
+		} finally {
+			setIsLoading(false);
 		}
 	};
 
@@ -92,6 +97,9 @@ export default function DashboardForm() {
 			</div>
 			<button type="submit" className="w-full bg-blue-500 text-white py-2 rounded hover:bg-blue-600">
 				Submit
+				{isLoading && (
+					<Spinner color="default" size="sm" labelColor="foreground" />
+				)}
 			</button>
 			{notification && (
 				<Notification message={notification} />
